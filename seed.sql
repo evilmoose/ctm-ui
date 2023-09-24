@@ -1,0 +1,3 @@
+DROP DATABASE IF EXISTS tarea_db;
+
+CREATE DATABASE tarea_db;
