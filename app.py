@@ -1,5 +1,7 @@
 from flask import Flask, render_template, redirect, session, jsonify,  url_for, flash
 
+from todoist_api_python.api import TodoistAPI
+
 from dotenv import load_dotenv
 import os
 
@@ -55,6 +57,26 @@ def login():
 def logout():
     session.pop("username", None)
     return redirect(url_for('login'))
+
+####################### API Routes ##############################
+
+@app.route('/tasks', methods=['GET'])
+def tasks():
+    getTasks()
+    #files = getFiles()
+    
+    return render_template('tasks.html')
+    #return render_template('tasks.html', files=files)
+
+def getTasks():
+    api = TodoistAPI(TODOIST_TOKEN)
+
+    try:
+        tasks = api.get_tasks()
+        print(tasks)
+
+    except Exception as error:
+        print(error)
 
 if __name__ == '__main__':
     app.run(debug=True)
