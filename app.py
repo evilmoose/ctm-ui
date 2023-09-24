@@ -63,7 +63,6 @@ def logout():
 @app.route('/tasks', methods=['GET'])
 def tasks():
     getTasks()
-    #files = getFiles()
     
     return render_template('tasks.html')
     #return render_template('tasks.html', files=files)
@@ -73,10 +72,24 @@ def getTasks():
 
     try:
         tasks = api.get_tasks()
-        print(tasks)
+        tasks_json = [task.to_dict() for task in tasks]
+        print(tasks_json)
+
+        tasksToFiles(tasks_json)
 
     except Exception as error:
         print(error)
+
+def tasksToFiles(tasks):
+    for i, task in enumerate(tasks):
+        # Get the task content
+        content = task.get('content', '')
+        # Create a filename for the task
+        filename = f'./files/task_{i+1}.txt'
+        
+        # Write the task content to the file
+        with open(filename, 'w') as f:
+            f.write(content)
 
 if __name__ == '__main__':
     app.run(debug=True)
