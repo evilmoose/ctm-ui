@@ -1,10 +1,17 @@
 from flask import Flask, render_template, redirect, session, jsonify,  url_for, flash
 
+from dotenv import load_dotenv
+import os
+
 from models import connect_db, db, User
 
 from forms import SignupForm, LoginForm
 
+load_dotenv()
+
 app = Flask(__name__)
+
+TODOIST_TOKEN = os.getenv("API_TOKEN")
 
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://ronaldlopez:123456@localhost:5432/tarea"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
