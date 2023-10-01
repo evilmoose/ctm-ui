@@ -1,7 +1,7 @@
 {% extends 'base-2.html' %}
 
 {% block title %}
-Create User
+Tarea Client Task Manager (CTM) - Login
 {% endblock %}
 
 {% block content %}
@@ -34,5 +34,5 @@ Create User
 
   <button class="btn btn-primary">Login!</button>
 </form>
-
+<div class="auth-option text-center pt-5">No Account? Sign up <a class="text-link" href="{{ url_for('signup') }}" >here</a>.</div>
 {% endblock %}
