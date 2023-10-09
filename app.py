@@ -87,6 +87,11 @@ def converted():
 
     return render_template('converted.html')
 
+@app.route('/executed', methods=['GET'])
+def executed():
+
+    return render_template('executed.html')
+
 def tasksToFiles(tasks):
     for i, task in enumerate(tasks):
         # Get the task content
