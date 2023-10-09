@@ -82,6 +82,11 @@ def getTasks():
     except Exception as error:
         print(error)
 
+@app.route('/converted', methods=['GET'])
+def converted():
+
+    return render_template('converted.html')
+
 def tasksToFiles(tasks):
     for i, task in enumerate(tasks):
         # Get the task content
