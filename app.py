@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, session, jsonify,  url_for, flash
+from flask import Flask, render_template, redirect, session, jsonify,  url_for, flash, json
 
 from todoist_api_python.api import TodoistAPI
 
@@ -98,6 +98,31 @@ def getTasks():
 def converted():
 
     return render_template('converted.html')
+
+@app.route('/convert/<task_id>', methods=['POST'])
+def convert(task_id):
+    # Directory path
+    dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/ronni/Application/tarea-ui/files')
+    file_path = os.path.join(dir_path, task_id)
+    
+    # Read the content of the task file
+    with open(file_path, 'r') as file:
+        content = file.readlines()
+    
+    # Process the content line by line
+    task_data = {}
+    for i in range(0, len(content) - 1, 2):  # Adjusting the range to avoid out-of-range errors
+        key = content[i].strip().replace('*', '')
+        value = content[i + 1].strip() if i + 1 < len(content) else ""  # Checking if the value exists
+        task_data[key] = value
+
+    # Convert the task data to JSON format and save it as a .json file
+    json_file_path = os.path.join(dir_path, f"{task_id.replace('.txt', '.json')}")
+    with open(json_file_path, 'w') as json_file:
+        json.dump(task_data, json_file)
+
+    flash("Task successfully converted!", 'success')
+    return redirect(url_for('tasks'))
 
 @app.route('/executed', methods=['GET'])
 def executed():
