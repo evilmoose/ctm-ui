@@ -57,24 +57,18 @@
                                     <tr>
                                         <th class="cell">ID</th>
                                         <th class="cell">Data</th>
-                                        <th class="cell">Customer</th>
-                                        <th class="cell">Date</th>
-                                        <th class="cell">Status</th>
-                                        <th class="cell">Location</th>
-                                        <th class="cell"></th>
+                                        <th class="cell">Action</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
+                                    {% for task in tasks %}
                                     <tr>
-                                        <td id="task-id" class="cell"><span class="truncate">{{ id }}</span></td>
-                                        <td id="task-data" class="cell"><span class="truncate">{{ data }}</span></td>
-                                        <td id="task-customer" class="cell">{{ customer }}</td>
-                                        <td id="task-date" class="cell"><span class="cell-data">{{ date }}</span><span class="note">{{ note }}</span></td>
-                                        <td id="task-status" class="cell"><span class="badge bg-warning">{{ status }}</span></td>
-                                        <td id="task-location" class="cell">{{ location }}</td>
+                                        <td id="task-id" class="cell"><span class="truncate">{{ task.id }}</span></td>
+                                        <td id="task-data" class="cell"><span class="truncate">{{ task.data }}</span></td>
                                         <td id="task-convert" class="cell"><a class="btn-sm app-btn-secondary" href="#">Convert</a></td>
                                     </tr>
+                                    {% endfor %}
                                 </tbody>
 
                             </table>

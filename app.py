@@ -66,8 +66,20 @@ def logout():
 def tasks():
     getTasks()
     
-    return render_template('tasks.html')
-    #return render_template('tasks.html', files=files)
+    # Directory path
+    dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/ronni/Application/tarea-ui/files')
+    
+    # Get all .txt files in the directory
+    file_names = [f for f in os.listdir(dir_path) if f.endswith('.txt')]
+    
+    # Read the content of each file
+    tasks = []
+    for file_name in file_names:
+        with open(os.path.join(dir_path, file_name), 'r') as file:
+            content = file.read()
+            tasks.append({'id': file_name, 'data': content})
+
+    return render_template('tasks.html', tasks=tasks)
 
 def getTasks():
     api = TodoistAPI(TODOIST_TOKEN)
