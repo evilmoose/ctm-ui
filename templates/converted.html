@@ -62,11 +62,17 @@
                                 </thead>
 
                                 <tbody>
+                                    {% for task in tasks %}
                                     <tr>
-                                        <td id="task-id" class="cell"><span class="truncate">{{ id }}</span></td>
-                                        <td id="task-data" class="cell"><span class="truncate">{{ data }}</span></td>
-                                        <td id="task-convert" class="cell"><a class="btn-sm app-btn-secondary" href="#">Execute</a></td>
+                                        <td id="task-id" class="cell"><span class="truncate">{{ task.id }}</span></td>
+                                        <td id="task-data" class="cell"><span class="truncate">{{ task.data }}</span></td>
+                                        <td id="task-convert" class="cell">
+                                            <form method="post" action="/execute/{{ task.id }}">
+                                                <button type="submit" class="btn-sm app-btn-secondary">Execute</button>
+                                            </form>
+                                         </td>
                                     </tr>
+                                    {% endfor %}
                                 </tbody>
 
                             </table>
