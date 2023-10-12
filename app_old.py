@@ -69,8 +69,18 @@ def logout():
 @app.route('/tasks', methods=['GET'])
 def tasks():
     getTasks()
+    
+    dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/ronni/Application/tarea-ui/files')
+    
+    file_names = [f for f in os.listdir(dir_path) if f.endswith('.txt')]
+    
+    tasks = []
+    for file_name in file_names:
+        with open(os.path.join(dir_path, file_name), 'r') as file:
+            content = file.read()
+            tasks.append({'id': file_name, 'data': content})
 
-    return render_template('tasks.html')
+    return render_template('tasks.html', tasks=tasks)
 
 def getTasks():
     api = TodoistAPI(TODOIST_TOKEN)
@@ -80,18 +90,57 @@ def getTasks():
         tasks_json = [task.to_dict() for task in tasks]
         print(tasks_json)
 
+        tasksToFiles(tasks_json)
+
     except Exception as error:
         print(error)
 
 @app.route('/converted', methods=['GET'])
 def converted():
 
-    return render_template('converted.html')
+    dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/ronni/Application/tarea-ui/files')
+    
+    file_names = [f for f in os.listdir(dir_path) if f.endswith('.json')]
+    
+    tasks = []
+    for file_name in file_names:
+        with open(os.path.join(dir_path, file_name), 'r') as file:
+            content = file.read()
+            tasks.append({'id': file_name, 'data': content})
+
+    return render_template('converted.html', tasks=tasks)
 
 @app.route('/convert/<task_id>', methods=['POST'])
 def convert(task_id):
 
+    dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/ronni/Application/tarea-ui/files')
+    file_path = os.path.join(dir_path, task_id)
+    
+    with open(file_path, 'r') as file:
+        content = file.readlines()
+    
+    task_data = {}
+    for i in range(0, len(content) - 1, 2):
+        key = content[i].strip().replace('*', '')
+        value = content[i + 1].strip() if i + 1 < len(content) else ""
+        task_data[key] = value
+
+    json_file_path = os.path.join(dir_path, f"{task_id.replace('.txt', '.json')}")
+    with open(json_file_path, 'w') as json_file:
+        json.dump(task_data, json_file)
+
+    flash("Task successfully converted!", 'success')
     return redirect(url_for('tasks'))
+
+def tasksToFiles(tasks):
+    for i, task in enumerate(tasks):
+
+        content = task.get('content', '')
+
+        filename = f'./files/task_{i+1}.txt'
+        
+        with open(filename, 'w') as f:
+            f.write(content)
 
 if __name__ == '__main__':
     app.run(debug=True)
