@@ -5,7 +5,7 @@ from todoist_api_python.api import TodoistAPI
 from dotenv import load_dotenv
 import os
 
-from models import connect_db, db, User
+from models import connect_db, db, User, Task
 
 from forms import SignupForm, LoginForm
 
@@ -66,13 +66,10 @@ def logout():
 def tasks():
     getTasks()
     
-    # Directory path
     dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/ronni/Application/tarea-ui/files')
     
-    # Get all .txt files in the directory
     file_names = [f for f in os.listdir(dir_path) if f.endswith('.txt')]
     
-    # Read the content of each file
     tasks = []
     for file_name in file_names:
         with open(os.path.join(dir_path, file_name), 'r') as file:
@@ -87,7 +84,27 @@ def getTasks():
     try:
         tasks = api.get_tasks()
         tasks_json = [task.to_dict() for task in tasks]
-        print(tasks_json)
+
+        for task in tasks_json:
+            # print(task.get('id'))
+            # print(task.get('is_completed'))
+            # print(task.get('created_at'))
+            # print(task.get('due'))
+            # print(task.get('labels'))
+            # print(task.get('project_id'))
+            # print(task.get('content'))
+            task = Task(
+                id=task.get('id'),
+                created_date=task.get('created_at'),
+                content=task.get('content'),
+                date_due=task.get('due'),
+                label=task.get('labels'),  
+                client=task.get('project_id')
+            )
+            db.session.add(task)
+
+        db.session.commit()
+
 
         tasksToFiles(tasks_json)
 
@@ -97,13 +114,10 @@ def getTasks():
 @app.route('/converted', methods=['GET'])
 def converted():
 
-    # Directory path
     dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/ronni/Application/tarea-ui/files')
     
-    # Get all .txt files in the directory
     file_names = [f for f in os.listdir(dir_path) if f.endswith('.json')]
     
-    # Read the content of each file
     tasks = []
     for file_name in file_names:
         with open(os.path.join(dir_path, file_name), 'r') as file:
@@ -114,22 +128,19 @@ def converted():
 
 @app.route('/convert/<task_id>', methods=['POST'])
 def convert(task_id):
-    # Directory path
+
     dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '/Users/ronni/Application/tarea-ui/files')
     file_path = os.path.join(dir_path, task_id)
     
-    # Read the content of the task file
     with open(file_path, 'r') as file:
         content = file.readlines()
     
-    # Process the content line by line
     task_data = {}
-    for i in range(0, len(content) - 1, 2):  # Adjusting the range to avoid out-of-range errors
+    for i in range(0, len(content) - 1, 2):
         key = content[i].strip().replace('*', '')
-        value = content[i + 1].strip() if i + 1 < len(content) else ""  # Checking if the value exists
+        value = content[i + 1].strip() if i + 1 < len(content) else "" 
         task_data[key] = value
 
-    # Convert the task data to JSON format and save it as a .json file
     json_file_path = os.path.join(dir_path, f"{task_id.replace('.txt', '.json')}")
     with open(json_file_path, 'w') as json_file:
         json.dump(task_data, json_file)
@@ -144,12 +155,11 @@ def executed():
 
 def tasksToFiles(tasks):
     for i, task in enumerate(tasks):
-        # Get the task content
+
         content = task.get('content', '')
-        # Create a filename for the task
+
         filename = f'./files/task_{i+1}.txt'
         
-        # Write the task content to the file
         with open(filename, 'w') as f:
             f.write(content)
 
