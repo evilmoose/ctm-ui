@@ -56,7 +56,11 @@
                                 <thead>
                                     <tr>
                                         <th class="cell">ID</th>
-                                        <th class="cell">Data</th>
+                                        <th class="cell">Created</th>
+                                        <th class="cell">Content</th>
+                                        <th class="cell">Due</th>
+                                        <th class="cell">Label</th>
+                                        <th class="cell">Client</th>
                                         <th class="cell">Action</th>
                                     </tr>
                                 </thead>
@@ -65,7 +69,11 @@
                                     {% for task in tasks %}
                                     <tr>
                                         <td id="task-id" class="cell"><span class="truncate">{{ task.id }}</span></td>
-                                        <td id="task-data" class="cell"><span class="truncate">{{ task.data }}</span></td>
+                                        <td id="task-data" class="cell"><span class="truncate">{{ task.created }}</span></td>
+                                        <td id="task-id" class="cell"><span class="truncate">{{ task.content }}</span></td>
+                                        <td id="task-id" class="cell"><span class="truncate">{{ task.due }}</span></td>
+                                        <td id="task-id" class="cell"><span class="truncate">{{ task.label }}</span></td>
+                                        <td id="task-id" class="cell"><span class="truncate">{{ task.client }}</span></td>
                                         <td id="task-convert" class="cell">
                                             <form method="post" action="/convert/{{ task.id }}">
                                                 <button type="submit" class="btn-sm app-btn-secondary">Convert</button>

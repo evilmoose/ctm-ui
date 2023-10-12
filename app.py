@@ -5,7 +5,7 @@ from todoist_api_python.api import TodoistAPI
 from dotenv import load_dotenv
 import os
 
-from models import connect_db, db, User
+from models import connect_db, db, User, Task
 
 from forms import SignupForm, LoginForm
 

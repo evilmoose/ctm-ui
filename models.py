@@ -35,3 +35,13 @@ class User(db.Model):
             return user
         else:
             return False
+
+class Task(db.Model):
+    __tablename__ = 'tasks'
+
+    id = db.Column(db.Integer, primary_key=True, unique=True)
+    created_date = db.Column(db.DateTime, nullable=False)
+    content = db.Column(db.String, nullable=False)
+    date_due = db.Column(db.DateTime, nullable=False)
+    label = db.Column(db.String, nullable=True)
+    client = db.Column(db.String, nullable=True)
